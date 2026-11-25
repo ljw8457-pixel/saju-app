@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1f1a16">
+<meta name="robots" content="noindex, nofollow">
 <title>사주 한 장</title>
 <!--
   사주 한 장 — 지인 테스트용 사주 웹앱 (단일 파일 / 오프라인 동작 / 서버 전송 없음)
@@ -309,9 +310,113 @@ input[type=text]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3p
   .jisin-wrap{grid-template-columns:repeat(4,1fr)}
 }
 
+/* ---------- 지인 초대 전용 입장 게이트 ---------- */
+html.gate-locked{background:var(--bg)}
+html.gate-locked body > *:not(#gate){display:none!important}
+.gate{
+  position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  padding:26px 20px calc(26px + env(safe-area-inset-bottom));overflow-y:auto;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(168,132,63,.16), transparent 44%),
+    radial-gradient(circle at 82% 92%, rgba(156,59,44,.12), transparent 46%),
+    var(--bg);
+}
+.gate[hidden]{display:none}
+.gate-card{
+  position:relative;width:100%;max-width:352px;padding:34px 24px 24px;text-align:center;
+  background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);
+}
+.gate-seal{
+  width:46px;height:46px;margin:0 auto 16px;border:1.5px solid rgba(156,59,44,.55);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Nanum Myeongjo","Noto Serif KR","Batang",serif;font-size:23px;color:var(--accent);
+  background:var(--accent-soft);letter-spacing:0;
+}
+.gate-kicker{margin:0 0 8px;font-size:11px;color:var(--muted);letter-spacing:.14em}
+.gate-title{margin:0;font-size:25px;letter-spacing:.06em;color:var(--ink)}
+.gate-desc{margin:12px 0 0;font-size:13px;line-height:1.7;color:var(--ink-2)}
+.gate-form{display:flex;flex-direction:column;gap:10px;margin:22px 0 0}
+.gate-input{
+  width:100%;padding:13px 14px;font:inherit;font-size:15px;color:var(--ink);text-align:center;
+  background:#fffdf7;border:1px solid var(--line);border-radius:12px;outline:none;letter-spacing:.12em;
+}
+.gate-input::placeholder{color:var(--muted);letter-spacing:.04em}
+.gate-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.gate-btn{
+  width:100%;padding:13px 14px;font:inherit;font-size:15px;font-weight:700;letter-spacing:.02em;
+  color:#fff8ec;background:var(--accent);border:0;border-radius:12px;cursor:pointer;
+}
+.gate-btn:active{transform:translateY(1px)}
+.gate-msg{min-height:19px;margin:12px 0 0;font-size:12.5px;color:var(--accent);opacity:0;transition:opacity .2s}
+.gate-msg.show{opacity:1}
+.gate-foot{margin:16px 0 0;font-size:11px;color:var(--muted);letter-spacing:.04em}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
 </style>
 </head>
 <body>
+<!-- 지인 초대 전용 입장 게이트 (전용 링크 ?k= 또는 입장 코드로 해제) -->
+<div class="gate" id="gate" hidden>
+  <div class="gate-card">
+    <div class="gate-seal" aria-hidden="true">命</div>
+    <p class="gate-kicker">지인 초대 전용 · 사주 한 장</p>
+    <h1 class="gate-title">사주 한 장</h1>
+    <p class="gate-desc">공유받은 전용 링크로 열거나<br>입장 코드를 입력해 주세요</p>
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <label class="sr-only" for="gate-code">입장 코드</label>
+      <input class="gate-input" id="gate-code" type="text" inputmode="text" placeholder="입장 코드"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="24">
+      <button class="gate-btn" type="submit">입장하기</button>
+    </form>
+    <p class="gate-msg" id="gate-msg" role="alert" aria-live="polite"></p>
+    <p class="gate-foot">초대받은 분만 열람할 수 있습니다</p>
+  </div>
+</div>
+<script>
+(function () {
+  var CODE = 'saju26';
+  var KEY = 'saju-gate-v1';
+  var root = document.documentElement;
+  var gate = document.getElementById('gate');
+  var msg = document.getElementById('gate-msg');
+  var input = document.getElementById('gate-code');
+
+  function readParam() {
+    try { return new URLSearchParams(location.search).get('k') || ''; } catch (e) { return ''; }
+  }
+  function remember() { try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+  function unlocked() {
+    try { if (localStorage.getItem(KEY) === '1') return true; } catch (e) {}
+    if (readParam().trim().toLowerCase() === CODE) { remember(); return true; }
+    return false;
+  }
+  function open() {
+    root.classList.remove('gate-locked');
+    if (gate) { gate.hidden = true; gate.style.display = 'none'; }
+    var f = document.getElementById('screen-form');
+    if (f) f.removeAttribute('hidden');
+  }
+  function lock() {
+    root.classList.add('gate-locked');
+    if (gate) gate.hidden = false;
+  }
+
+  if (unlocked()) { open(); } else { lock(); }
+
+  var form = document.getElementById('gate-form');
+  if (form) form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var v = (input.value || '').trim().toLowerCase();
+    if (v === CODE) { remember(); open(); if (input) input.blur(); return; }
+    if (msg) {
+      msg.textContent = v ? '코드가 맞지 않습니다. 공유받은 전용 링크를 다시 확인해 주세요.' : '입장 코드를 입력해 주세요.';
+      msg.classList.add('show');
+    }
+    if (input) { input.focus(); input.select(); }
+  });
+  if (input) input.addEventListener('input', function () { if (msg) msg.classList.remove('show'); });
+})();
+</script>
 <div class="app" id="screen-form">
   <header class="hero">
     <div class="hero-seal">命</div>

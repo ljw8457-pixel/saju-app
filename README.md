@@ -5,9 +5,17 @@
 ## 열기 / 공유
 
 - 폰이나 PC에서 `index.html`을 열면 바로 실행됩니다. (안드로이드 크롬, iOS 사파리, PC 브라우저)
-- 링크로 지인에게 보내려면 GitHub Pages 같은 정적 호스팅에 `index.html` 한 개만 올리면 됩니다.
+- 링크로 지인에게 보내려면 GitHub Pages 같은 정적 호스팅에 올리면 됩니다.
   - 예: 저장소에 `index.html`을 올리고 Settings → Pages → Branch: main / root 선택 → `https://<계정>.github.io/<저장소>/`
 - 카카오톡으로 파일 자체를 보낼 때는 zip으로 묶어 보내고, 받은 사람이 브라우저로 열면 됩니다.
+
+### 지인 초대 전용 링크(입장 코드 잠금)
+
+- 기본 주소(`https://ljw8457-pixel.github.io/saju-app/`)로 접속하면 잠금 화면만 보이고 사주 앱 본문은 열리지 않습니다.
+- 공유할 때는 전용 링크를 보냅니다: `https://ljw8457-pixel.github.io/saju-app/?k=saju26`
+- 전용 링크로 열거나 잠금 화면에 입장 코드 `saju26`을 입력하면 해제되고, 같은 기기에서는 새로고침해도 유지됩니다(localStorage).
+- 검색엔진 노출 차단: `<meta name="robots" content="noindex, nofollow">` + `robots.txt`(`Disallow: /`).
+- 이 잠금은 링크를 아는 사람만 들이는 가벼운 초대용 장치입니다. 페이지 소스에는 코드가 들어 있으므로, 소스를 열어 보는 사람에게는 보호되지 않습니다.
 
 ## 입력 항목
 
