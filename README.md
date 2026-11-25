@@ -135,6 +135,15 @@ python verify.py
 - `preview-result.png` — 결과 화면(전체)
 - `preview-result-top.png` — 결과 화면 첫 화면(390×844)
 
+### 라이브 화면(390×844, 2026-11-25)
+
+- `shots/live-form-mbti.png` — 입력 화면의 MBTI 16유형 칩
+- `shots/live-result-top.png` — 한 줄 요약 + MBTI 크로스 한 줄
+- `shots/live-mbti-age.png` — 「사주 × MBTI 크로스 리포트」 상단(축별 막대·판정)
+- `shots/live-mbti-cross.png` — 크로스 리포트 하단(일·관계, 잘 맞는 상대, 숙제)
+- `shots/live-age-50s.png` — 「지금 이 나이대의 사주 흐름」(50대 예시)
+- `shots/live-mbti-none.png` — MBTI를 고르지 않았을 때(안내 문구만)
+
 ## 라이선스 표기
 
 - 만세력 계산: [lunar-javascript 1.7.7](https://www.npmjs.com/package/lunar-javascript) — MIT License, Copyright (c) 2018 6tail (index.html에 인라인)
