@@ -17,6 +17,15 @@
 - 검색엔진 노출 차단: `<meta name="robots" content="noindex, nofollow">` + `robots.txt`(`Disallow: /`).
 - 이 잠금은 링크를 아는 사람만 들이는 가벼운 초대용 장치입니다. 페이지 소스에는 코드가 들어 있으므로, 소스를 열어 보는 사람에게는 보호되지 않습니다.
 
+## 배포 구조
+
+- GitHub Pages 주소: <https://ljw8457-pixel.github.io/saju-app/>
+- Pages 배포 소스는 `gh-pages` 브랜치(`/`)입니다. (GitHub App 권한 한도로 main을 소스로 지정하는 API 변경이 안 되어, `gh-pages` 브랜치를 만들었을 때 GitHub이 자동으로 Pages를 켰습니다.)
+- 따라서 내용을 고칠 때는 `main`에 커밋한 뒤 **`main`을 `gh-pages`로도 푸시**해야 사이트에 반영됩니다.
+  - `git push origin main`
+  - `git push origin main:gh-pages`
+- 저장소 설정에서 직접 바꾸려면 <https://github.com/ljw8457-pixel/saju-app/settings/pages> 에서 Branch를 `main` / `/ (root)`로 바꿔도 됩니다. 그렇게 바꾸면 `gh-pages` 브랜치는 지워도 됩니다.
+
 ## 입력 항목
 
 | 항목 | 설명 |
