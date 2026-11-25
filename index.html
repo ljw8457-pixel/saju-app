@@ -1726,16 +1726,33 @@ function josa(word, withBatchim, withoutBatchim) {
 function jijiParagraphs(r) {
   var rels = jijiRelations(r);
   if (!rels.length) return ['원국 안에서 지지끼리 크게 부딪히거나 얽히는 자리는 없습니다. 네 기둥이 각자 제자리를 지키고 있어서, 삶이 급격히 흔들리기보다 완만하게 흘러가는 편입니다.'];
-  var out = rels.map(function (rel) {
+
+  /* 같은 관계가 여러 자리에서 겹치면 한 문단으로 묶는다 */
+  var order = [], byType = {};
+  rels.forEach(function (rel) {
+    var key = rel.type + (rel.zhis ? rel.zhis.join('') : '');
+    if (!byType[key]) { byType[key] = []; order.push(key); }
+    byType[key].push(rel);
+  });
+
+  return order.map(function (key) {
+    var items = byType[key];
+    var rel = items[0];
     if (rel.type === '삼합') {
       return '원국에 <b>' + rel.zhis.join('·') + ' 삼합</b>이 있습니다. ' + EL_KO[rel.el] + ' 기운이 한 덩어리로 모이는 구조라, ' + JIJI_TEXT['삼합'];
     }
-    var head = '원국에서 <b>' + PILLAR_NAME[rel.ka].charAt(0) + '지 ' + rel.a.zhi + '(' + rel.a.zhiKo + ')' +
-      josa(rel.a.zhiKo, '과', '와') + ' ' + PILLAR_NAME[rel.kb].charAt(0) + '지 ' + rel.b.zhi + '(' + rel.b.zhiKo + ')' +
-      '가 ' + rel.type + '</b>을 이룹니다. ';
-    return head + JIJI_TEXT[rel.type] + ' ' + (PAIR_HINT[rel.ka + '-' + rel.kb] || '');
+    var pairs = items.map(function (it) {
+      return PILLAR_NAME[it.ka].charAt(0) + '지 ' + it.a.zhi + '(' + it.a.zhiKo + ')' +
+        josa(it.a.zhiKo, '과', '와') + ' ' + PILLAR_NAME[it.kb].charAt(0) + '지 ' + it.b.zhi + '(' + it.b.zhiKo + ')';
+    });
+    var head = '원국에서 <b>' + pairs.join(', ') + '가 ' + rel.type + '</b>을 이룹니다. ';
+    var hints = [];
+    items.forEach(function (it) {
+      var h = PAIR_HINT[it.ka + '-' + it.kb];
+      if (h && hints.indexOf(h) < 0) hints.push(h);
+    });
+    return head + JIJI_TEXT[rel.type] + (hints.length ? ' ' + hints.join(' ') : '');
   });
-  return out;
 }
 
 /* ---------- 세운 ---------- */
