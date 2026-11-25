@@ -1990,7 +1990,7 @@ function ageSectionData(r) {
     '<div><span>만 나이</span><b>' + age + '세</b></div>' +
     '<div><span>나이대</span><b>' + band.label + '</b></div>' +
     (dw ? '<div><span>현재 대운</span><b>' + dw.gan + dw.zhi + ' · ' + dw.ss + '</b></div>'
-        : '<div><span>현재 대운</span><b>첫 대운 전</b></div>') +
+        : '<div><span>현재 대운</span><b>' + (r.daewun.list.length && age > r.daewun.list[r.daewun.list.length - 1].endAge ? '대운표 이후' : '첫 대운 전') + '</b></div>') +
   '</div>';
 
   var kw = '<p class="kw-row">' + [band.name].concat(B.themes)
@@ -2015,7 +2015,12 @@ function ageSectionData(r) {
       paras.push('대운의 지지 <b>' + dw.zhi + ' ' + EL_KO[el] + '</b>' + josaEnd(el, '이', '가') + ' 원국의 ' + EL_KO[el] + ' 기운을 보태는 구간입니다. 이 기운이 필요한 일을 이 10년 안에 배치하면 훨씬 수월하게 풀립니다.');
     }
   } else {
-    paras.push('아직 첫 대운이 들어오기 전입니다(첫 대운 ' + r.daewun.startAgeText + ' 시작). 그 전까지는 타고난 원국의 기운이 그대로 드러나는 때라, 주변 환경의 영향을 크게 받습니다. 이 시기의 습관과 사람이 이후 대운을 받아들이는 그릇이 됩니다.');
+    var last = r.daewun.list[r.daewun.list.length - 1];
+    if (last && age > last.endAge) {
+      paras.push('대운표에 나온 마지막 구간(' + last.endAge + '세)을 지났습니다. 전통 만세력은 90세 안팎까지 대운을 적기 때문에, 이후는 원국의 네 기둥과 해마다 드는 세운으로 읽습니다. 나이가 들수록 새로 벌이기보다 원국에서 이미 강한 기운을 어떻게 지키느냐가 중요해집니다.');
+    } else {
+      paras.push('아직 첫 대운이 들어오기 전입니다(첫 대운 ' + r.daewun.startAgeText + ' 시작). 그 전까지는 타고난 원국의 기운이 그대로 드러나는 때라, 주변 환경의 영향을 크게 받습니다. 이 시기의 습관과 사람이 이후 대운을 받아들이는 그릇이 됩니다.');
+    }
   }
 
   paras.push(B.career);
