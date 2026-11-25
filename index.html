@@ -414,7 +414,7 @@ html.gate-locked body > *:not(#gate){display:none!important}
     }
     if (input) { input.focus(); input.select(); }
   });
-  if (input) input.addEventListener('input', function () { if (msg) msg.classList.remove('show'); });
+  if (input) input.addEventListener('input', function () { if (msg) { msg.classList.remove('show'); msg.textContent = ''; } });
 })();
 </script>
 <div class="app" id="screen-form">
